@@ -1,3 +1,17 @@
+# In order to setup webpack correctly
+
+- Remove react-scripts
+- Install craco (npm i @craco/craco)
+- Create a craco.config.js file in the root directory
+- Replace react-script commands with craco in package.json
+- Add the following to dependencies in package.json:
+  "buffer",
+  "crypto-browserify",
+  "file-loader",
+  "process",
+  "stream-browserify",
+  "util"
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
