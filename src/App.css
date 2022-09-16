@@ -1,9 +1,10 @@
 .App {
   text-align: center;
+  font-family: "Montserrat", sans-serif;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10rem;
   pointer-events: none;
 }
 
@@ -13,26 +14,216 @@
   }
 }
 
+.Header-Nav-Component {
+  position: fixed;
+  top: 0;
+  display: flex;
+  background-color: black;
+  color: white;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  z-index: 200;
+}
+
+.Nav-logo {
+  height: 2rem;
+}
+
+.Hash-logo {
+  height: 5rem;
+  padding: 10px;
+}
+
+.Logo-and-Title-Component {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.Header-Login-Component {
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Header-Login-Info {
+  font-size: 12.8px;
+}
+
+.Button {
+  background-color: #6b9bf1;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14.8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.Button-Disabled {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  border: none;
+  color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  font-size: 14.8px;
+  font-weight: bold;
+  cursor: not-allowed;
+}
+
+.Button-Cancel {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  font-size: 14.8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.Card-Div {
+  width: 100%;
+  color: white;
+  background-color: #282c34;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  align-items: center;
+  position: relative;
+  padding-top: 50px;
+}
+
+.Individual-Card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: #4b5f81;
+  border-radius: 4px;
+  width: 150px;
+  height: 150px;
+  transition: 0.3s;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.Individual-Card-Content {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.Tx-Div {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 40px;
+  grid-row-gap: 20px;
+  margin: 40px 20px;
+}
+
+.Modal {
+  top: 0;
+  left: 0;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: #444444;
+  z-index: 1000;
+}
+
+.Modal-Card {
+  width: 400px;
+  transition: 1s all;
+  position: relative;
+  border-radius: 10px;
+  background: #eeeeee;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.25);
+}
+
+.Modal-Exit {
+  background: #ffffff;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Individual-Card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.Form {
+  width: 100%;
+}
+
+.Label {
+  display: flex;
+  padding: 20px 0 10px 0;
+  width: 100%;
+  font-weight: bold;
+}
+
+.Input {
+  font-size: 14px;
+  font-weight: bold;
+  width: 100%;
+  padding: 10px 10px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+}
+
+.Helper-Text {
+  text-align: left;
+  margin: 20px 0;
+  font-size: 12px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
+  padding-top: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #3f80f3;
 }
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: scale(1) rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: scale(1) rotate(360deg);
   }
+}
+
+.QR-Code-Modal {
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
 }
