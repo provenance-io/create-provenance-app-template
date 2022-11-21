@@ -1,45 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
-import hash from "./hash.svg";
 import "./App.css";
 import {
   QRCodeModal,
   useWalletConnect,
   WINDOW_MESSAGES,
 } from "@provenanceio/walletconnect-js";
-import {
-  SendCoinData,
-  BroadcastResults,
-} from "@provenanceio/walletconnect-js/lib/types";
+import { BroadcastResults } from "@provenanceio/walletconnect-js/lib/types";
 import { BaseResults } from "@provenanceio/walletconnect-js/lib/types/BaseResults";
+import {
+  CreateGroupModal,
+  HashModal,
+  Modal,
+  RandomMsgModal,
+  TxCard,
+} from "./Components";
+import { getAccountInfo } from "@provenanceio/wallet-utils";
+import { TESTNET_GRPC_CLIENT } from "./consts";
 
-interface TxCardProps {
-  title?: string;
-  onClick?: () => void;
-}
-
-interface ModalProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-}
-
-function App() {
+export const App = () => {
   ///////////// - Define walletConnect Services and State - /////////////////////
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect();
+  const [myBaseAccount, setMyBaseAccount] = useState<any>(null);
   ///////////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////////
   // State settings for the template applications
-  const [showModal, setShowModal] = useState(false);
   const [children, setChildren] = useState<React.ReactNode>();
   ///////////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////////
-  /* walletConnect Actions
-     - These actions are currently supported by wcjs, and perform the various
-       functions seen in the template.
-  */
-  // wcjs Login Function
+  /* walletConnect Login */
   // This function displays the login modal provided by wcjs
   const handleLogin = () => {
     if (walletConnectState.address) {
@@ -48,102 +39,31 @@ function App() {
       wcs.connect();
     }
   };
-  // Send Hash Action
-  // Note that both hash and nhash are supported in wcjs
-  // This application example uses hash as the denom
-  const sendHashAction = ({ to, amount, denom }: SendCoinData) =>
-    wcs.sendCoin({ to, amount, denom });
   ///////////////////////////////////////////////////////////////////////////////
 
-  /////////////////////- Message Inputs and Actions - ///////////////////////////
-  // Send Hash inputs
-  const amountRef = useRef<HTMLInputElement>(null);
-  const addressRef = useRef<HTMLInputElement>(null);
-  const handleSendHashSubmit = () => {
-    if (addressRef && addressRef.current && amountRef && amountRef.current) {
-      sendHashAction({
-        to: "", //addressRef.current.value,
-        amount: Number(amountRef.current.value),
-        denom: "hash",
-      });
-    }
+  // Account info
+  const getMyAccount = async () => {
+    const { accountNumber } = await getAccountInfo(
+      walletConnectState.address,
+      TESTNET_GRPC_CLIENT
+    );
+    setMyBaseAccount(accountNumber);
   };
-  ///////////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////- Specific Action Modals - /////////////////////////////
-  // Note: We highly recommend using Formik for your forms
-  // Send Hash modal
-  const HashModal = (
-    <>
-      <img src={hash} className="Hash-logo" alt="hash-logo" />
-      <div className="Form">
-        <label className="Label" htmlFor="amount">
-          Amount of Hash to Send:{" "}
-        </label>
-        <input
-          ref={amountRef}
-          className="Input"
-          type="number"
-          id="amount"
-          name="amount"
-          placeholder="Enter hash amount"
-        />
-      </div>
-      <div className="Form">
-        <label className="Label" htmlFor="address">
-          Wallet Address:{" "}
-        </label>
-        <input
-          ref={addressRef}
-          className="Input"
-          type="text"
-          id="address"
-          name="address"
-          placeholder="Recipient Wallet Address"
-        />
-      </div>
-      <div className="Helper-Text">
-        Current Wallet: {walletConnectState?.assets || "N/A"} hash
-      </div>
-      <button
-        className="Button"
-        onClick={() => {
-          handleSendHashSubmit();
-        }}
-      >
-        Submit
-      </button>
-    </>
-  );
-  ///////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    if (walletConnectState.address) {
+      getMyAccount();
+    }
+    // Only want to repull if the address changes
+    // eslint-disable-next-line
+  }, [walletConnectState.address]);
+
+  console.log(myBaseAccount);
 
   ///////////////////////- Template Components - ////////////////////////////////
-  // Modal Framework
-  const Modal = ({ children, onClick }: ModalProps) => (
-    <div className="Modal">
-      <div className="Modal-Card">
-        <div className="Modal-Exit" onClick={() => setShowModal(!showModal)}>
-          <svg
-            viewBox="0 0 10 10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            height="1.4rem"
-          >
-            <path d="M8.99984 1L5.09375 5L8.99984 9" />
-            <path d="M1.00016 1L4.90625 5L1.00016 9" />
-          </svg>
-        </div>
-        {children}
-        <button
-          className="Button-Cancel"
-          onClick={() => setShowModal(!showModal)}
-        >
-          Exit
-        </button>
-      </div>
-    </div>
-  );
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+
   // Set initial state to login
   useEffect(() => {
     if (!walletConnectState.address) {
@@ -154,12 +74,6 @@ function App() {
       setChildren(LoginPrompt);
     }
   }, [walletConnectState.address]);
-  // Tx Cards
-  const TxCard = ({ title = "Example", onClick }: TxCardProps) => (
-    <div className="Individual-Card" onClick={onClick}>
-      <div className="Individual-Card-Content">{title}</div>
-    </div>
-  );
   // Success Message
   const SuccessMessage = ({ msgType }: { msgType: string }) => (
     <div>{msgType} was successful!</div>
@@ -186,7 +100,7 @@ function App() {
       console.log(`WalletConnectJS | Complete | Result: `, result);
       setChildren(SuccessMessage({ msgType: "Transaction" }));
     };
-    wcs.addListener(WINDOW_MESSAGES.TRANSACTION_COMPLETE, transactionSuccess);
+    wcs.addListener(WINDOW_MESSAGES.SEND_MESSAGE_COMPLETE, transactionSuccess);
 
     // Fail message for transaction messages
     const transactionFailure = (result: BroadcastResults) => {
@@ -198,16 +112,16 @@ function App() {
         FailureMessage({ msgType: "Transaction", error: String(error) })
       );
     };
-    wcs.addListener(WINDOW_MESSAGES.TRANSACTION_FAILED, transactionFailure);
+    wcs.addListener(WINDOW_MESSAGES.SEND_MESSAGE_FAILED, transactionFailure);
 
     // Remove event listeners when no longer needed
     return () => {
       wcs.removeListener(
-        WINDOW_MESSAGES.TRANSACTION_COMPLETE,
+        WINDOW_MESSAGES.SEND_MESSAGE_COMPLETE,
         transactionSuccess
       );
       wcs.removeListener(
-        WINDOW_MESSAGES.TRANSACTION_FAILED,
+        WINDOW_MESSAGES.SEND_MESSAGE_FAILED,
         transactionFailure
       );
       wcs.removeAllListeners();
@@ -272,19 +186,41 @@ function App() {
             onClick: () => {
               setShowModal(!showModal);
               if (walletConnectState.address) {
-                setChildren(HashModal);
+                setChildren(<HashModal />);
               }
             },
           })}
           {/* Placeholder Cards */}
-          {TxCard({})}
-          {TxCard({})}
+          {TxCard({
+            title: "Send base64 Msg",
+            onClick: () => {
+              setShowModal(!showModal);
+              if (walletConnectState.address) {
+                setChildren(<RandomMsgModal />);
+              }
+            },
+          })}
+          {TxCard({
+            title: "Create Group",
+            onClick: () => {
+              setShowModal(!showModal);
+              if (walletConnectState.address) {
+                setChildren(<CreateGroupModal />);
+              }
+            },
+          })}
           {TxCard({})}
           {TxCard({})}
           {TxCard({})}
         </div>
       </header>
-      {showModal && Modal({ children })}
+      {showModal && (
+        <Modal
+          children={children}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
       <QRCodeModal
         walletConnectService={wcs}
         title="Scan the QRCode with your mobile Provenance Blockchain Wallet."
@@ -293,6 +229,4 @@ function App() {
       />
     </div>
   );
-}
-
-export default App;
+};

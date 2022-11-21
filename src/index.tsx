@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { WalletConnectContextProvider } from "@provenanceio/walletconnect-js";
 
@@ -11,6 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <WalletConnectContextProvider
+      // @ts-ignore TO-DO: Figure out this issue?
       network={process.env.NODE_ENV === "production" ? "mainnet" : "testnet"}
     >
       <App />
