@@ -11,7 +11,7 @@ import { TESTNET_GRPC_CLIENT } from '../../consts'
 import { Button, Form, InputGroup } from '../Component'
 
 export const HashModal = () => {
-  const [formErrors, setFormErrors] = useState('')
+  const [formErrors, setFormErrors] = useState<string[]>([])
   // Send Hash inputs
   const [amount, setAmount] = useState('')
   const [toAddress, setToAddress] = useState('')
@@ -42,7 +42,7 @@ export const HashModal = () => {
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
-    setFormErrors('')
+    setFormErrors([])
 
     try {
       const message = getSendHashMessage()
@@ -54,7 +54,7 @@ export const HashModal = () => {
         description: 'Send Hash',
       })
     } catch (err) {
-      setFormErrors((err as object).toString())
+      setFormErrors((e) => [...e, (err as object).toString()])
       console.error(err)
     }
   }
@@ -63,6 +63,11 @@ export const HashModal = () => {
     try {
       invariant(toAddress, 'A recipient address is required')
       invariant(amount, 'A Hash amount is required')
+
+      invariant(
+        Number(amount) <= Number(myHash.amount) / 1e9,
+        'The amount must be less than or equal to what you have available'
+      )
 
       return createAnyMessageBase64(
         'MsgSend',
@@ -78,7 +83,8 @@ export const HashModal = () => {
         })
       )
     } catch (err) {
-      setFormErrors((err as object).toString())
+      console.error(err)
+      setFormErrors((e) => [...e, (err as object).toString()])
     }
   }
 
@@ -90,9 +96,10 @@ export const HashModal = () => {
         alt="hash-logo"
       />
 
-      {formErrors && (
-        <span className="col-span-full text-red-500">{formErrors}</span>
-      )}
+      {formErrors.length > 0 &&
+        formErrors.map((err) => (
+          <span className="col-span-full text-red-500">{err}</span>
+        ))}
 
       <InputGroup
         label="Amount of Hash to Send:"

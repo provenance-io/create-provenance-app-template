@@ -6,8 +6,7 @@ import { Button, Form, InputGroup } from '../Component'
 
 export const UpdateGroupMembersModal = () => {
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
-
-  const [formErrors, setFormErrors] = useState('')
+  const [formErrors, setFormErrors] = useState<string[]>([])
   const [adminAddress, setAdminAddress] = useState(walletConnectState.address)
   const [memberAddress, setMemberAddress] = useState('')
   const [memberWeight, setMemberWeight] = useState('')
@@ -15,7 +14,7 @@ export const UpdateGroupMembersModal = () => {
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
-    setFormErrors('')
+    setFormErrors([])
     try {
       const message = getCreateGroupMessage()
 
@@ -27,7 +26,7 @@ export const UpdateGroupMembersModal = () => {
       })
     } catch (err) {
       console.error(err)
-      setFormErrors((err as object).toString())
+      setFormErrors((e) => [...e, (err as object).toString()])
     }
   }
   // Create Group Message
@@ -53,15 +52,16 @@ export const UpdateGroupMembersModal = () => {
         })
       )
     } catch (err) {
-      setFormErrors((err as object).toString())
+      setFormErrors((e) => [...e, (err as object).toString()])
     }
   }
 
   return (
     <Form onSubmit={handleSubmit}>
-      {formErrors && (
-        <span className="col-span-full text-red-500">{formErrors}</span>
-      )}
+      {formErrors.length > 0 &&
+        formErrors.map((err) => (
+          <span className="col-span-full text-red-500">{err}</span>
+        ))}
 
       <InputGroup
         label="Admin Address:"
