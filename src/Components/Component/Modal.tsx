@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
+import { useWalletConnect } from '@provenanceio/walletconnect-js'
 import { Button } from './Button'
 
 interface ModalProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   setShowModal: (arg: boolean) => void
   showModal: boolean
 }
 
 export const Modal = ({ children, setShowModal, showModal }: ModalProps) => {
+  const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
   const [hidden, setHidden] = useState(false)
+  const [childToRender, setChildToRender] = useState<React.ReactNode>(children)
 
   useEffect(() => {
     if (showModal) setHidden(false)
@@ -27,6 +30,21 @@ export const Modal = ({ children, setShowModal, showModal }: ModalProps) => {
     window.addEventListener('keydown', onEsc)
     return () => window.removeEventListener('keydown', onEsc)
   }, [showModal, setShowModal])
+
+  // Login Modal Prompt
+  const LoginPrompt = (
+    <>
+      <div>Please connect to test walletconnect-js actions</div>
+      <Button
+        onClick={() => {
+          setShowModal(false)
+          walletConnectState.address ? wcs.disconnect() : wcs.connect()
+        }}
+      >
+        Connect
+      </Button>
+    </>
+  )
 
   return (
     <div
@@ -56,7 +74,7 @@ export const Modal = ({ children, setShowModal, showModal }: ModalProps) => {
             <path d="M1.00016 1L4.90625 5L1.00016 9" />
           </svg>
         </div>
-        {children}
+        {!walletConnectState.address ? LoginPrompt : children}
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
 // import { getGroupsByMember } from '@provenanceio/wallet-utils'
 // import { TESTNET_GRPC_CLIENT } from '../../consts'
-import { Button, Form, InputGroup } from '../Component'
+import { Button, Form, InputGroup } from '../../../Components'
 
 export const CheckGroupIdByMember = () => {
   const [formErrors, setFormErrors] = useState('')

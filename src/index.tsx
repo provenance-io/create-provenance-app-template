@@ -2,9 +2,33 @@ import './polyfills'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 import { WalletConnectContextProvider } from '@provenanceio/walletconnect-js'
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from 'react-router-dom'
+import { Page } from './Components'
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<Page />} />
+      <Route
+        path="groups"
+        element={
+          <Page
+            type="groups"
+            title="Select group actions and queries below"
+          />
+        }
+      />
+      {/* ... etc. */}
+    </>
+  )
+)
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -13,7 +37,7 @@ root.render(
       // @ts-ignore TO-DO: Figure out this issue?
       network={process.env.NODE_ENV === 'production' ? 'mainnet' : 'testnet'}
     >
-      <App />
+      <RouterProvider router={router} />
     </WalletConnectContextProvider>
   </React.StrictMode>
 )

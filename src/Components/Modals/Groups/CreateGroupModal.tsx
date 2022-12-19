@@ -1,10 +1,10 @@
 import { FormEvent, useState } from 'react'
-import invariant from 'tiny-invariant'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
 import { buildMessage, createAnyMessageBase64 } from '@provenanceio/wallet-utils'
-import { Button, Form, InputGroup } from '../Component'
+import invariant from 'tiny-invariant'
+import { Button, Form, InputGroup } from '../../../Components'
 
-export const UpdateGroupMembersModal = () => {
+export const CreateGroupModal = () => {
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
   const [formErrors, setFormErrors] = useState<string[]>([])
   const [adminAddress, setAdminAddress] = useState(walletConnectState.address)
@@ -15,20 +15,21 @@ export const UpdateGroupMembersModal = () => {
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
     setFormErrors([])
+
     try {
       const message = getCreateGroupMessage()
-
-      invariant(message, 'A message is required')
+      invariant(message, 'Message was not created')
 
       wcs.sendMessage({
         message,
         description: 'Create Group',
       })
     } catch (err) {
-      console.error(err)
       setFormErrors((e) => [...e, (err as object).toString()])
+      console.error(err)
     }
   }
+
   // Create Group Message
   const getCreateGroupMessage = () => {
     try {
@@ -37,7 +38,7 @@ export const UpdateGroupMembersModal = () => {
       invariant(memberWeight, 'Member weight is required')
       invariant(memberMetadata, 'Member metadata is required')
 
-      createAnyMessageBase64(
+      return createAnyMessageBase64(
         'MsgCreateGroup',
         buildMessage('MsgCreateGroup', {
           admin: adminAddress,
@@ -67,35 +68,37 @@ export const UpdateGroupMembersModal = () => {
         label="Admin Address:"
         name="adminAddress"
         onChange={setAdminAddress}
-        placeholder={`${walletConnectState.address} (you)`}
         value={adminAddress}
+        placeholder={`${walletConnectState.address} (you)`}
       />
 
       <InputGroup
         label="Member Address:"
         name="memberAddress"
         onChange={setMemberAddress}
-        placeholder="Enter address of the first group member"
         value={memberAddress}
+        placeholder="Enter address of the first group member"
       />
 
       <InputGroup
-        label="Member Voting Weight:"
+        label="Member Weight:"
         name="memberWeight"
         onChange={setMemberWeight}
-        placeholder="Enter member voting weight"
         value={memberWeight}
+        placeholder="Enter member voting weight"
       />
 
       <InputGroup
         label="Member Metadata:"
-        name="memberMeta"
+        name="memberMetadata"
         onChange={setMemberMetadata}
-        placeholder="Enter any member metadata"
         value={memberMetadata}
+        placeholder="Enter any member metadata"
       />
 
-      <Button className="mt-8">Submit</Button>
+      <Button className="mt-8" type="submit">
+        Submit
+      </Button>
     </Form>
   )
 }

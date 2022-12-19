@@ -1,5 +1,6 @@
 export * from './Component'
 export * from './Header'
 export * from './Hero'
-export * from './InformationCards'
+export * from '../Components/InformationCards'
 export * from './Modals'
+export * from './Pages'
