@@ -2,21 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useWalletConnect, WINDOW_MESSAGES } from '@provenanceio/walletconnect-js'
 import { BroadcastResults } from '@provenanceio/walletconnect-js/lib/types'
 import { BaseResults } from '@provenanceio/walletconnect-js/lib/types/BaseResults'
-import { getAccountInfo } from '@provenanceio/wallet-utils'
-import { TESTNET_GRPC_CLIENT } from './consts'
-import {
-  Button,
-  Header,
-  Hero,
-  Modal,
-  QRCodeModal,
-} from './Components'
-import { InformationCards } from './Components/InformationCards'
+import { Header, Hero, Modal, QRCodeModal } from '../../../Components'
+import { InformationCards } from '../../../Components/InformationCards'
 
-export const App = () => {
+export const Page = ({
+  type = '',
+  title = '',
+}: {
+  type?: string
+  title?: string
+}) => {
   ///////////// - Define walletConnect Services and State - /////////////////////
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
-  const [myBaseAccount, setMyBaseAccount] = useState<any>(null)
   ///////////////////////////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -32,47 +29,10 @@ export const App = () => {
 
   ///////////////////////////////////////////////////////////////////////////////
 
-  // Account info
-  const getMyAccount = async () => {
-    const { accountNumber } = await getAccountInfo(
-      walletConnectState.address,
-      TESTNET_GRPC_CLIENT
-    )
-    setMyBaseAccount(accountNumber)
-  }
-
-  useEffect(() => {
-    if (walletConnectState.address) {
-      getMyAccount()
-    }
-    // Only want to repull if the address changes
-    // eslint-disable-next-line
-  }, [walletConnectState.address])
-
   ///////////////////////- Template Components - ////////////////////////////////
   // Modal state
   const [showModal, setShowModal] = useState(false)
 
-  // Set initial state to login
-  useEffect(() => {
-    if (!walletConnectState.address) {
-      // Login Modal Prompt
-      const LoginPrompt = (
-        <>
-          <div>Please connect to test walletconnect-js actions</div>
-          <Button
-            onClick={() => {
-              setShowModal(false)
-              handleLogin()
-            }}
-          >
-            Connect
-          </Button>
-        </>
-      )
-      setModalChildren(LoginPrompt)
-    }
-  }, [walletConnectState.address]) // eslint-disable-line react-hooks/exhaustive-deps
   // Success Message
   const SuccessMessage = ({ msgType }: { msgType: string }) => (
     <div>{msgType} was successful!</div>
@@ -126,13 +86,13 @@ export const App = () => {
     <div className="min-h-screen bg-gray-800 font-sans">
       <Header handleLogin={handleLogin} />
 
-      <Hero />
+      <Hero title={title} />
 
       <InformationCards
-        setModalChildren={setModalChildren}
-        setShowModal={setShowModal}
         showModal={showModal}
-        type=''
+        setShowModal={setShowModal}
+        setModalChildren={setModalChildren}
+        type={type}
       />
 
       <Modal
@@ -140,6 +100,7 @@ export const App = () => {
         showModal={showModal}
         setShowModal={setShowModal}
       />
+
       <QRCodeModal />
     </div>
   )

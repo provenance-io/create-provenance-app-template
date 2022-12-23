@@ -1,6 +1,6 @@
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
 import logo from '../logo.svg'
-import { Button } from './Component'
+import { Button } from '../Components/Component/Button'
 
 interface HeaderProps {
   handleLogin: () => void

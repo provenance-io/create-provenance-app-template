@@ -26,7 +26,6 @@ export const getAccountBalances = (address: string, serviceAddress: string) => {
             )
           );
         else {
-          // console.log(JSON.stringify(response.toObject()));
           resolve(response.toObject());
         }
       }

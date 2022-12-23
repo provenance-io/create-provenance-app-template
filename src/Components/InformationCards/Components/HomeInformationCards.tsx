@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
-import { TxCard } from './Component'
-import { CreateGroupModal, HashModal, RandomMsgModal } from './Modals'
+import { TxCard } from '../../Component/TxCard'
+import { HashModal, RandomMsgModal } from '../../Modals'
 
 interface ICProps {
   setModalChildren: (val: ReactNode) => void
@@ -9,15 +10,15 @@ interface ICProps {
   showModal: boolean
 }
 
-export const InformationCards = ({
+export const HomeInformationCards = ({
   setModalChildren,
   setShowModal,
   showModal,
 }: ICProps) => {
   const { walletConnectState } = useWalletConnect()
+  const navigate = useNavigate()
   return (
-    <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-5 py-10 px-5 sm:grid-cols-autofit-300">
-      {/* Hash Modal */}
+    <>
       <TxCard
         title="Send Hash"
         onClick={() => {
@@ -27,7 +28,6 @@ export const InformationCards = ({
           }
         }}
       />
-      {/* Placeholder Cards */}
       <TxCard
         title="Send base64 Msg"
         onClick={() => {
@@ -38,17 +38,9 @@ export const InformationCards = ({
         }}
       />
       <TxCard
-        title="Create Group"
-        onClick={() => {
-          setShowModal(!showModal)
-          if (walletConnectState.address) {
-            setModalChildren(<CreateGroupModal />)
-          }
-        }}
+        title="Groups"
+        onClick={() => navigate('/groups')}
       />
-      <TxCard />
-      <TxCard />
-      <TxCard />
-    </div>
+    </>
   )
 }
