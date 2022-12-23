@@ -1,14 +1,17 @@
 import { FormEvent, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
-// import { getGroupsByMember } from '@provenanceio/wallet-utils'
-// import { TESTNET_GRPC_CLIENT } from '../../consts'
-import { Button, Form, InputGroup } from '../../../Components'
+import { getGroupsByMember } from '@provenanceio/wallet-utils'
+import { Button, Form, InputGroup } from '../..'
+import { TESTNET_GRPC_CLIENT } from '../../../consts'
+import { GroupInfo } from '@provenanceio/wallet-utils/lib/proto/cosmos/group/v1/types_pb'
+import ReactJson from 'react-json-view'
 
-export const CheckGroupIdByMember = () => {
+export const GetGroupIdByMember = () => {
   const [formErrors, setFormErrors] = useState('')
   const [memberAddress, setMemberAddress] = useState('')
   const { walletConnectState } = useWalletConnect()
+  const [groups, setGroups] = useState<GroupInfo.AsObject[]>()
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
@@ -16,12 +19,15 @@ export const CheckGroupIdByMember = () => {
 
     try {
       invariant(memberAddress, 'Member Address is required')
-
-      // const { results } = await getGroupsByMember(String(memberAddressRef && memberAddressRef.current && memberAddressRef.current.value), TESTNET_GRPC_CLIENT);
-      console.log('you submitted it!')
+      getMyGroup(memberAddress)
     } catch (err) {
       setFormErrors((err as object).toString())
     }
+  }
+
+  const getMyGroup = async (address: string) => {
+    const { groupsList } = await getGroupsByMember(address, TESTNET_GRPC_CLIENT)
+    setGroups(groupsList)
   }
 
   return (
@@ -37,6 +43,17 @@ export const CheckGroupIdByMember = () => {
         placeholder={walletConnectState.address}
         value={memberAddress}
       />
+
+      {groups && memberAddress && (
+        <>
+          <div className="text-lg font-bold">Groups ({groups.length} total):</div>
+          {groups.length > 0 ? (
+            <ReactJson src={groups} style={{ wordBreak: 'break-all' }} />
+          ) : (
+            <>Member {memberAddress} is not attached to any groups</>
+          )}
+        </>
+      )}
 
       <Button className="mt-8">Submit</Button>
     </Form>

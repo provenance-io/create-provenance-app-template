@@ -11,7 +11,6 @@ interface ModalProps {
 export const Modal = ({ children, setShowModal, showModal }: ModalProps) => {
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
   const [hidden, setHidden] = useState(false)
-  const [childToRender, setChildToRender] = useState<React.ReactNode>(children)
 
   useEffect(() => {
     if (showModal) setHidden(false)
@@ -57,7 +56,7 @@ export const Modal = ({ children, setShowModal, showModal }: ModalProps) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative grid min-h-full min-w-full place-items-center gap-6 bg-gray-200 p-10 shadow-md transition-all duration-1000 sm:min-h-0 sm:w-[600px] sm:min-w-0 sm:rounded-lg"
+        className="relative grid max-h-[600px] min-h-full min-w-full place-items-center gap-6 overflow-y-auto bg-gray-200 p-10 shadow-md transition-all duration-1000 sm:min-h-0 sm:w-[600px] sm:min-w-0 sm:rounded-lg"
       >
         <div
           className="absolute top-2.5 right-2.5 grid h-6 w-6 cursor-pointer place-content-center rounded-full"

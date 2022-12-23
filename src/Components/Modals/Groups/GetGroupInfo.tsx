@@ -4,15 +4,7 @@ import { getGroupInfo } from '@provenanceio/wallet-utils'
 import { TESTNET_GRPC_CLIENT } from '../../../consts'
 import { Button, Form, InputGroup } from '../../../Components'
 import { GroupInfo } from '@provenanceio/wallet-utils/lib/proto/cosmos/group/v1/types_pb'
-
-const GroupInfoList = ({ title, content }: { title: string; content: string }) => (
-  <>
-    <div className="font-bold">
-      {title}: <span className="font-normal">{content}</span>
-    </div>
-    <hr className="neutral-900" />
-  </>
-)
+import ReactJson from 'react-json-view'
 
 export const GetGroupInfo = () => {
   const [formErrors, setFormErrors] = useState('')
@@ -49,21 +41,18 @@ export const GetGroupInfo = () => {
         placeholder="0"
         value={groupId}
       />
-      <div className="text-lg font-bold">Group Info:</div>
-      <>
-        {groupInfo &&
-          Object.keys(groupInfo).map((key, index) => (
-            <GroupInfoList
-              key={index}
-              title={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-              content={
-                key === 'createdAt'
-                  ? new Date(groupInfo.createdAt.seconds * 1000).toDateString()
-                  : groupInfo[key as keyof GroupInfo.AsObject] || 'N/A'
-              }
-            />
-          ))}
-      </>
+      {groupInfo && groupId && (
+        <>
+          <div className="text-lg font-bold">
+            Group Info:
+          </div>
+          {Object.keys(groupInfo).length > 0 ? (
+            <ReactJson src={groupInfo} style={{ wordBreak: 'break-all' }} />
+          ) : (
+            <>Group {groupId} has no info</>
+          )}
+        </>
+      )}
 
       <Button className="mt-8">Submit</Button>
     </Form>

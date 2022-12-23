@@ -1,4 +1,4 @@
-export * from './CheckGroupIdByMember'
+export * from './GetGroupIdByMember'
 export * from './CreateGroupModal'
 export * from './GetGroupInfo'
 export * from './GetGroupMembers'

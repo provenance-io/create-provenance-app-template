@@ -1,29 +1,15 @@
-import React, { FormEvent, useState, Fragment } from 'react'
+import { FormEvent, useState, Fragment } from 'react'
 import invariant from 'tiny-invariant'
 import { getGroupPolicyByGroup } from '@provenanceio/wallet-utils'
 import { TESTNET_GRPC_CLIENT } from '../../../consts'
 import { Button, Form, InputGroup } from '../../../Components'
 import { GroupPolicyInfo } from '@provenanceio/wallet-utils/lib/proto/cosmos/group/v1/types_pb'
-
-const GroupPoliciesList = ({
-  title,
-  content,
-}: {
-  title: string
-  content: string
-}) => (
-  <>
-    <div className="font-bold">
-      {title}: <span className="font-normal">{content}</span>
-    </div>
-    <hr className="neutral-900" />
-  </>
-)
+import ReactJson from 'react-json-view'
 
 export const GetGroupPolicyByGroup = () => {
   const [formErrors, setFormErrors] = useState('')
   const [groupId, setGroupId] = useState('')
-  const [groupPolicies, setGroupPolicies] = useState<GroupPolicyInfo.AsObject[]>([])
+  const [groupPolicies, setGroupPolicies] = useState<GroupPolicyInfo.AsObject[]>()
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
@@ -52,20 +38,23 @@ export const GetGroupPolicyByGroup = () => {
       )}
 
       <InputGroup
-        label="Policy address to Query:"
+        label="Group to Query:"
         name="groupId"
         onChange={setGroupId}
         placeholder="0"
         value={groupId}
       />
-      <div className="text-lg font-bold">Policy Info:</div>
-      <div className="text-lg font-bold">
-        Group Policies ({groupPolicies.length} total):
-      </div>
-      {groupPolicies ? (
-        groupPolicies.length > 0 && <>{JSON.stringify(groupPolicies)}</>
-      ) : (
-        <>{groupId} has no members</>
+      {groupPolicies && groupId && (
+        <>
+          <div className="text-lg font-bold">
+            Group Policies ({groupPolicies.length} total):
+          </div>
+          {groupPolicies.length > 0 ? (
+            <ReactJson src={groupPolicies} style={{ wordBreak: 'break-all' }} />
+          ) : (
+            <>Group {groupId} has no policies</>
+          )}
+        </>
       )}
 
       <Button className="mt-8">Submit</Button>

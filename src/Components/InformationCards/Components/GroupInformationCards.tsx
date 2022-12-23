@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
 import { TxCard } from '../../Component/TxCard'
 import {
-  CheckGroupIdByMember,
+  GetGroupIdByMember,
   CreateGroupModal,
   GetGroupInfo,
   GetGroupMembers,
@@ -38,7 +38,7 @@ export const GroupInformationCards = ({
         onClick={() => {
           setShowModal(!showModal)
           if (walletConnectState.address) {
-            setModalChildren(<CheckGroupIdByMember />)
+            setModalChildren(<GetGroupIdByMember />)
           }
         }}
       />

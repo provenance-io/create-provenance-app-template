@@ -4,15 +4,7 @@ import { getGroupPolicyInfo } from '@provenanceio/wallet-utils'
 import { TESTNET_GRPC_CLIENT } from '../../../consts'
 import { Button, Form, InputGroup } from '../../../Components'
 import { GroupPolicyInfo } from '@provenanceio/wallet-utils/lib/proto/cosmos/group/v1/types_pb'
-
-const GroupPolicyInfoList = ({ title, content }: { title: string; content: string }) => (
-  <>
-    <div className="font-bold">
-      {title}: <span className="font-normal">{content}</span>
-    </div>
-    <hr className="neutral-900" />
-  </>
-)
+import ReactJson from 'react-json-view'
 
 export const GetGroupPolicy = () => {
   const [formErrors, setFormErrors] = useState('')
@@ -32,7 +24,7 @@ export const GetGroupPolicy = () => {
   }
 
   const getMyGroupPolicyInfo = async (address: string) => {
-    const { info } = await getGroupPolicyInfo(address, TESTNET_GRPC_CLIENT, )
+    const { info } = await getGroupPolicyInfo(address, TESTNET_GRPC_CLIENT)
     setGroupPolicy(info)
   }
 
@@ -49,21 +41,16 @@ export const GetGroupPolicy = () => {
         placeholder="0"
         value={address}
       />
-      <div className="text-lg font-bold">Policy Info:</div>
-      <>
-        {groupPolicy &&
-          Object.keys(groupPolicy).map((key, index) => (
-            <GroupPolicyInfoList
-              key={index}
-              title={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-              content={
-                key === 'createdAt'
-                  ? new Date(groupPolicy.createdAt.seconds * 1000).toDateString()
-                  : groupPolicy[key as keyof GroupPolicyInfo.AsObject] || 'N/A'
-              }
-            />
-          ))}
-      </>
+      {groupPolicy && address && (
+        <>
+          <div className="text-lg font-bold">Policy Info:</div>
+          {Object.keys(groupPolicy).length > 0 ? (
+            <ReactJson src={groupPolicy} style={{ wordBreak: 'break-all' }} />
+          ) : (
+            <>Policy address {address} has no info</>
+          )}
+        </>
+      )}
 
       <Button className="mt-8">Submit</Button>
     </Form>
