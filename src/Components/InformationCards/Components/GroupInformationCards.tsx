@@ -8,6 +8,8 @@ import {
   GetGroupMembers,
   GetGroupPolicy,
   GetGroupPolicyByGroup,
+  VoteGroupProposal,
+  SubmitGroupProposal,
 } from '../../Modals'
 
 interface ICProps {
@@ -75,6 +77,24 @@ export const GroupInformationCards = ({
           setShowModal(!showModal)
           if (walletConnectState.address) {
             setModalChildren(<GetGroupPolicyByGroup />)
+          }
+        }}
+      />
+      <TxCard
+        title="Submit Group Proposal"
+        onClick={() => {
+          setShowModal(!showModal)
+          if (walletConnectState.address) {
+            setModalChildren(<SubmitGroupProposal />)
+          }
+        }}
+      />
+      <TxCard
+        title="Vote on Group Proposal"
+        onClick={() => {
+          setShowModal(!showModal)
+          if (walletConnectState.address) {
+            setModalChildren(<VoteGroupProposal />)
           }
         }}
       />

@@ -9,6 +9,7 @@ import {
 import invariant from 'tiny-invariant'
 import { TESTNET_GRPC_CLIENT } from '../../consts'
 import { Button, Form, InputGroup } from '../Component'
+import { Message } from 'google-protobuf'
 
 export const HashModal = () => {
   const [formErrors, setFormErrors] = useState<string[]>([])
@@ -80,7 +81,7 @@ export const HashModal = () => {
               denom: 'nhash',
             },
           ],
-        })
+        }) as Message
       )
     } catch (err) {
       console.error(err)

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { GroupInformationCards, HomeInformationCards } from './Components'
+import { ContractsInformationCards } from './Components/ContractsInformationCards'
 
 interface ICProps {
   setModalChildren: (val: ReactNode) => void
@@ -12,17 +13,33 @@ export const InformationCards = ({
   setModalChildren,
   setShowModal,
   showModal,
-  type
+  type,
 }: ICProps) => {
   const getCards = (type: string) => {
     switch (type) {
       case 'groups':
         return (
-          <GroupInformationCards setModalChildren={setModalChildren} setShowModal={setShowModal} showModal={showModal}/>
+          <GroupInformationCards
+            setModalChildren={setModalChildren}
+            setShowModal={setShowModal}
+            showModal={showModal}
+          />
+        )
+      case 'contracts':
+        return (
+          <ContractsInformationCards
+            setModalChildren={setModalChildren}
+            setShowModal={setShowModal}
+            showModal={showModal}
+          />
         )
       default:
         return (
-          <HomeInformationCards setModalChildren={setModalChildren} setShowModal={setShowModal} showModal={showModal}/>
+          <HomeInformationCards
+            setModalChildren={setModalChildren}
+            setShowModal={setShowModal}
+            showModal={showModal}
+          />
         )
     }
   }
