@@ -47,6 +47,17 @@ export const InputGroup = ({
             placeholder={placeholder}
           />
         )
+      case 'checkbox':
+        return (
+          <input
+            className="box-border max-h-[50px] w-full max-w-[50px] self-center p-2.5 text-sm font-bold"
+            name={name}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            type={type}
+            value={value}
+          />
+        )
       default:
         return (
           <input
@@ -63,7 +74,7 @@ export const InputGroup = ({
   return (
     <label
       className={`grid w-full ${
-        type === 'checkbox' && 'grid-cols-2 gap-0'
+        type === 'checkbox' && 'grid-cols-[1fr_0.25fr] gap-0'
       } gap-2.5 font-bold ${className}`}
     >
       <span className="font-bold">{label}</span>
