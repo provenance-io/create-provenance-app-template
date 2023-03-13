@@ -3,6 +3,7 @@ import invariant from 'tiny-invariant'
 import { useWalletConnect } from '@provenanceio/walletconnect-js'
 import { buildMessage, createAnyMessageBase64 } from '@provenanceio/wallet-utils'
 import { Button, Form, InputGroup } from '../../../Components'
+import { Message } from 'google-protobuf'
 
 export const UpdateGroupMembersModal = () => {
   const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
@@ -49,7 +50,7 @@ export const UpdateGroupMembersModal = () => {
               metadata: memberMetadata,
             },
           ],
-        })
+        }) as Message
       )
     } catch (err) {
       setFormErrors((e) => [...e, (err as object).toString()])

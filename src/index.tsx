@@ -19,10 +19,13 @@ const router = createBrowserRouter(
       <Route
         path="groups"
         element={
-          <Page
-            type="groups"
-            title="Select group actions and queries below"
-          />
+          <Page type="groups" title="Select group actions and queries below" />
+        }
+      />
+      <Route
+        path="contracts"
+        element={
+          <Page type="contracts" title="Select contract actions and queries below" />
         }
       />
       {/* ... etc. */}

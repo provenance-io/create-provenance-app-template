@@ -37,10 +37,8 @@ export const HomeInformationCards = ({
           }
         }}
       />
-      <TxCard
-        title="Groups"
-        onClick={() => navigate('/groups')}
-      />
+      <TxCard title="Groups" onClick={() => navigate('/groups')} />
+      <TxCard title="Contracts" onClick={() => navigate('/contracts')} />
     </>
   )
 }
