@@ -24,14 +24,6 @@ export const App = () => {
   const [modalChildren, setModalChildren] = useState<React.ReactNode>()
   ///////////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////////
-  /* walletConnect Login */
-  // This function displays the login modal provided by wcjs
-  const handleLogin = () =>
-    walletConnectState.address ? wcs.disconnect() : wcs.connect()
-
-  ///////////////////////////////////////////////////////////////////////////////
-
   // Account info
   const getMyAccount = async () => {
     const { accountNumber } = await getAccountInfo(
@@ -65,7 +57,7 @@ export const App = () => {
           <Button
             onClick={() => {
               setShowModal(false)
-              handleLogin()
+              wcs.connect()
             }}
           >
             Connect
@@ -126,7 +118,7 @@ export const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-800 font-sans">
-      <Header handleLogin={handleLogin} />
+      <Header />
 
       <Hero />
 

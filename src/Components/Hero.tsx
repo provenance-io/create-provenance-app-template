@@ -1,7 +1,7 @@
 import logo from '../logo.svg'
 
 export const Hero = () => (
-  <section className="grid justify-items-center gap-10 pt-40 text-2vmin text-gray-100">
+  <section className="grid justify-items-center gap-10 px-5 pt-40 text-2vmin text-gray-100">
     <div className="grid grid-cols-4 gap-2.5">
       <img src={logo} className="h-40 rotate-180" alt="logo" />
       <div className="grid grid-cols-1">
